@@ -143,7 +143,13 @@ def processThreadMessages(thread: str, cursor: str, filename: str, loading_messa
 def getInbox() -> dict:
     url = f"https://i.instagram.com/api/v1/direct_v2/inbox/?persistentBadging=true&folder=&limit={MAX_THREADS}&thread_message_limit={MAX_MESSAGES_PER_THREAD}"
     req = requests.get(url, headers=AUTH.getHeaders())
-    return getParsedResponse(req.text)
+
+    try:
+        response = getParsedResponse(req.text)
+        return response
+    except:
+        input("Invalid credentials! Press any key to go back to main menu!\n")
+        menu()
 
 def refreshMenu() -> None:
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -166,6 +172,7 @@ def authenticationMenu() -> None:
 
     AUTH.setAuthCookie(auth_cookie)
     AUTH.setInstagramAppId(instagram_app_id)
+    menu()
 
 def inboxMenu(refresh_inbox = True) -> None:
     if not AUTH.hasHeaders():
