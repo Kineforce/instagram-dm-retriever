@@ -240,12 +240,4 @@ def menu():
 
     menu()
 
-
-# hasValidArgs = checkArgs(thread, cursor, x_ig_app_id, cookie)
-# if (len(hasValidArgs) > 0):
-#     print(hasValidArgs)
-#     sys.exit()
-
-# startProcessing(thread, cursor, x_ig_app_id, cookie)
-
 menu()
