@@ -7,7 +7,7 @@ import pprint
 from datetime import datetime
 from types import SimpleNamespace
 
-IS_DEBUG_MODE = False
+IS_DEBUG_MODE = True
 
 class Inbox:
     _owner = dict
@@ -85,7 +85,11 @@ def getPaginatedThreadMessages(thread: str, cursor: str) -> list:
                 if IS_DEBUG_MODE: print(f"DEBUG --> Message id {item.item_id} found! Retrieving...")
 
                 me = payload_thread.inviter.full_name
-                other = payload_thread.users[0].full_name
+
+                if len(payload_thread.users) == 0:
+                    other = "unknown"
+                else:
+                    other = payload_thread.users[0].full_name
 
                 messages.append({
                     "item_id": item.item_id,
@@ -209,7 +213,13 @@ def inboxMenu(refresh_inbox = True) -> None:
         thread_title = selected_thread.thread_title
         loading_message = f"Downloading messages from thread {selected_id}: {thread_title}"
         thread_item = selected_thread.items[0]
-        filename = f"messages_between_{selected_thread.users[0].username}_and_{INBOX.getOwner().username}"
+        other_user_name = ""
+        if (len(selected_thread.users) == 0):
+            other_user_name = "unknown"
+        else:
+            other_user_name = selected_thread.users[0].username
+
+        filename = f"messages_between_{other_user_name}_and_{INBOX.getOwner().username}"
         processThreadMessages(selected_thread.thread_id, thread_item.item_id, filename, loading_message)
         print(f"Processing finished! See the results on the created file: {filename}.\n")
         print("Do you wish to download another thread? (y/n)\n")
